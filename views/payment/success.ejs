@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت موفق | فروشگاه</title>
+    <link rel="stylesheet" href="/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card text-center shadow">
+                    <div class="card-header bg-success text-white">
+                        <h3>پرداخت با موفقیت انجام شد</h3>
+                    </div>
+                    <div class="card-body py-5">
+                        <div class="mb-4">
+                            <i class="fa fa-check-circle text-success" style="font-size: 60px;"></i>
+                        </div>
+                        <h4 class="card-title mb-4">از خرید شما متشکریم</h4>
+                        <p class="card-text mb-3">پرداخت شما با موفقیت انجام شد و سفارش شما ثبت گردید.</p>
+                        
+                        <div class="alert alert-info mt-4" id="refIdBox">
+                            <p class="m-0">شماره مرجع: <strong id="refId"></strong></p>
+                        </div>
+                        
+                        <p class="text-muted mt-4">لطفا این شماره را برای پیگیری‌های بعدی نزد خود نگه دارید.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/" class="btn btn-outline-primary">بازگشت به صفحه اصلی</a>
+                        <a href="/api/users/profile" class="btn btn-primary">مشاهده سفارشات</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get reference code from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const refId = urlParams.get('refId');
+        
+        // Display reference code if available
+        if (refId) {
+            document.getElementById('refId').textContent = refId;
+        } else {
+            document.getElementById('refIdBox').style.display = 'none';
+        }
+    </script>
+</body>
+</html> 

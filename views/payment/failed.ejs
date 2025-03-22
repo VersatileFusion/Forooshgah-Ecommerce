@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت ناموفق | فروشگاه</title>
+    <link rel="stylesheet" href="/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card text-center shadow">
+                    <div class="card-header bg-danger text-white">
+                        <h3>پرداخت ناموفق بود</h3>
+                    </div>
+                    <div class="card-body py-5">
+                        <div class="mb-4">
+                            <i class="fa fa-times-circle text-danger" style="font-size: 60px;"></i>
+                        </div>
+                        <h4 class="card-title mb-4">متأسفیم، پرداخت شما ناموفق بود</h4>
+                        <p class="card-text mb-3">متأسفانه پرداخت شما با موفقیت انجام نشد و سفارش شما ثبت نگردید.</p>
+                        
+                        <div class="alert alert-warning mt-4" id="errorBox">
+                            <p class="m-0">دلیل خطا: <strong id="errorText"></strong></p>
+                        </div>
+                        
+                        <p class="text-muted mt-4">در صورت کسر وجه از حساب شما، مبلغ طی ۷۲ ساعت آینده به حساب شما باز خواهد گشت.</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/" class="btn btn-outline-primary">بازگشت به صفحه اصلی</a>
+                        <a href="/cart" class="btn btn-primary">بازگشت به سبد خرید</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get error message from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMsg = urlParams.get('error');
+        
+        // Display error message if available
+        if (errorMsg) {
+            document.getElementById('errorText').textContent = decodeURIComponent(errorMsg);
+        } else {
+            document.getElementById('errorText').textContent = "خطای نامشخص";
+        }
+    </script>
+</body>
+</html> 

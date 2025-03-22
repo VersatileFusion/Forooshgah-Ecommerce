@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت | فروشگاه</title>
+    <link rel="stylesheet" href="/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">پرداخت سفارش</h5>
+                        <% if (orderDetails) { %>
+                            <span>شماره سفارش: <%= orderDetails.orderNumber %></span>
+                        <% } %>
+                    </div>
+                    <div class="card-body">
+                        <% if (orderDetails) { %>
+                            <div class="mb-4">
+                                <h6 class="text-muted mb-3">مشخصات سفارش</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="width: 200px;">تاریخ سفارش</th>
+                                            <td><%= new Date(orderDetails.createdAt).toLocaleDateString('fa-IR') %></td>
+                                        </tr>
+                                        <tr>
+                                            <th>مبلغ کل</th>
+                                            <td class="text-primary fw-bold"><%= new Intl.NumberFormat('fa-IR').format(orderDetails.totalAmount) %> تومان</td>
+                                        </tr>
+                                        <tr>
+                                            <th>تعداد اقلام</th>
+                                            <td><%= orderDetails.items.length %> مورد</td>
+                                        </tr>
+                                        <tr>
+                                            <th>وضعیت سفارش</th>
+                                            <td>
+                                                <% if (orderDetails.status === 'PENDING') { %>
+                                                    <span class="badge bg-warning">در انتظار پرداخت</span>
+                                                <% } else if (orderDetails.status === 'PAID') { %>
+                                                    <span class="badge bg-success">پرداخت شده</span>
+                                                <% } else if (orderDetails.status === 'CANCELED') { %>
+                                                    <span class="badge bg-danger">لغو شده</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-secondary"><%= orderDetails.status %></span>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <% if (orderDetails.status === 'PENDING' || orderDetails.status === 'PENDING_PAYMENT') { %>
+                                <form action="/api/payments/request" method="POST" class="text-center">
+                                    <input type="hidden" name="orderId" value="<%= orderDetails._id %>">
+                                    <button type="submit" class="btn btn-success btn-lg px-5 py-3">
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        پرداخت از طریق درگاه زرین‌پال
+                                    </button>
+                                </form>
+                            <% } else if (orderDetails.status === 'PAID') { %>
+                                <div class="alert alert-success text-center">
+                                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                                    <h5>این سفارش قبلاً پرداخت شده است</h5>
+                                    <p>شما می‌توانید وضعیت سفارش خود را در صفحه سفارشات پیگیری کنید.</p>
+                                    <a href="/api/users/profile" class="btn btn-outline-success mt-2">مشاهده سفارشات</a>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div class="alert alert-warning text-center py-4">
+                                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                                <h5>سفارشی برای پرداخت انتخاب نشده است</h5>
+                                <p>لطفاً ابتدا یک سفارش ایجاد کنید یا از صفحه سفارشات، سفارش مورد نظر خود را برای پرداخت انتخاب کنید.</p>
+                                <div class="mt-3">
+                                    <a href="/cart" class="btn btn-primary mx-2">سبد خرید</a>
+                                    <a href="/api/users/profile" class="btn btn-outline-secondary mx-2">سفارشات من</a>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">راهنمای پرداخت</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="guide-steps">
+                            <div class="step d-flex mb-3">
+                                <div class="step-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">1</div>
+                                <div class="step-content">
+                                    <h6>بررسی اطلاعات سفارش</h6>
+                                    <p class="text-muted small">اطلاعات سفارش و مبلغ قابل پرداخت را بررسی کنید.</p>
+                                </div>
+                            </div>
+                            <div class="step d-flex mb-3">
+                                <div class="step-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">2</div>
+                                <div class="step-content">
+                                    <h6>انتقال به درگاه پرداخت</h6>
+                                    <p class="text-muted small">پس از کلیک روی دکمه پرداخت، به درگاه امن زرین‌پال منتقل می‌شوید.</p>
+                                </div>
+                            </div>
+                            <div class="step d-flex mb-3">
+                                <div class="step-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">3</div>
+                                <div class="step-content">
+                                    <h6>ورود اطلاعات کارت</h6>
+                                    <p class="text-muted small">اطلاعات کارت بانکی خود را وارد کرده و پرداخت را تایید کنید.</p>
+                                </div>
+                            </div>
+                            <div class="step d-flex">
+                                <div class="step-icon bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 36px; height: 36px;">4</div>
+                                <div class="step-content">
+                                    <h6>بازگشت به سایت</h6>
+                                    <p class="text-muted small">پس از انجام پرداخت، به سایت بازگردانده می‌شوید و نتیجه به شما نمایش داده می‌شود.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-light border mt-4 p-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-shield-alt text-success me-2"></i>
+                                <strong>پرداخت امن</strong>
+                            </div>
+                            <p class="small mb-0">تمامی اطلاعات به صورت رمزنگاری شده منتقل می‌شوند و درگاه پرداخت مورد تایید شاپرک است.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <% if (recentTransactions && recentTransactions.length > 0) { %>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">تراکنش‌های اخیر</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                <% recentTransactions.forEach(transaction => { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                        <div>
+                                            <div class="d-flex align-items-center">
+                                                <% if (transaction.status === 'SUCCESS') { %>
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                <% } else if (transaction.status === 'FAILED') { %>
+                                                    <i class="fas fa-times-circle text-danger me-2"></i>
+                                                <% } else { %>
+                                                    <i class="fas fa-clock text-warning me-2"></i>
+                                                <% } %>
+                                                <span><%= new Intl.NumberFormat('fa-IR').format(transaction.amount) %> تومان</span>
+                                            </div>
+                                            <small class="text-muted d-block mt-1">
+                                                <%= new Date(transaction.createdAt).toLocaleDateString('fa-IR') %>
+                                            </small>
+                                        </div>
+                                        <% if (transaction.status === 'SUCCESS') { %>
+                                            <span class="badge bg-success">موفق</span>
+                                        <% } else if (transaction.status === 'FAILED') { %>
+                                            <span class="badge bg-danger">ناموفق</span>
+                                        <% } else { %>
+                                            <span class="badge bg-warning text-dark">در حال انجام</span>
+                                        <% } %>
+                                    </li>
+                                <% }); %>
+                            </ul>
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="/api/users/profile#transactions" class="text-decoration-none">مشاهده همه تراکنش‌ها</a>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <%- include('../partials/footer') %>
+    
+    <script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
